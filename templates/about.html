@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About Us - Crop Recommendation System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #f0fff0, #e6f2ff);
+    color: #2c3e50;
+    overflow-x: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 20px;
+  }
+
+  /* HEADER */
+  .about-header {
+    text-align: center;
+    margin-bottom: 50px;
+    perspective: 1000px;
+    animation: dropZoom 1s ease-out both;
+  }
+
+  .about-header h1 {
+    font-size: 48px;
+    color: #2a7d2e;
+    margin-bottom: 10px;
+    text-shadow:
+      1px 1px 0 #1f4d14,
+      2px 2px 0 #256d28,
+      3px 3px 6px rgba(0, 0, 0, 0.2);
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+    cursor: default;
+  }
+
+  .about-header h1:hover {
+    transform: translateZ(15px) rotateX(5deg);
+  }
+
+  .about-header p {
+    font-size: 20px;
+    color: #34495e;
+  }
+
+  /* CONTAINER FLEX */
+  .about-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+    align-items: stretch;
+    perspective: 1000px;
+  }
+
+  /* TEXT CARD */
+  .about-text {
+    flex: 1 1 500px;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    will-change: transform, box-shadow;
+    animation: textSlideTilt 1.2s ease-out both;
+    cursor: pointer;
+  }
+
+  .about-text:hover {
+    transform: perspective(800px) rotateY(6deg) translateZ(10px);
+    box-shadow: 0 20px 40px rgba(42, 125, 46, 0.3);
+  }
+
+  .about-text ul {
+    margin-top: 10px;
+    padding-left: 20px;
+    line-height: 1.8;
+  }
+
+  .about-text li span {
+    font-weight: bold;
+  }
+
+  /* IMAGE CARD */
+  .about-image {
+    flex: 1 1 400px;
+    animation: imagePopFlip 1.3s ease-out both;
+  }
+
+  .about-image img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s ease;
+    will-change: transform;
+  }
+
+  .about-image img:hover {
+    transform: scale(1.03) rotateY(3deg);
+  }
+
+  /* BACK BUTTON */
+  .back-button {
+    display: inline-block;
+    margin-top: 40px;
+    text-decoration: none;
+    background-color: #2a7d2e;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 30px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 12px rgba(42, 125, 46, 0.4);
+    will-change: transform, box-shadow;
+  }
+
+  .back-button:hover {
+    background-color: #1f5f21;
+    transform: scale(1.07) translateZ(5px);
+    box-shadow: 0 10px 20px rgba(42, 125, 46, 0.6);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .about-container {
+      flex-direction: column;
+    }
+
+    .about-text,
+    .about-image {
+      width: 100%;
+    }
+  }
+
+  /* ANIMATION KEYFRAMES */
+  @keyframes dropZoom {
+    0% {
+      opacity: 0;
+      transform: translateY(-80px) scale(0.8) rotateX(20deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotateX(0deg);
+    }
+  }
+
+  @keyframes textSlideTilt {
+    0% {
+      opacity: 0;
+      transform: translateX(-60px) rotateY(10deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+    }
+  }
+
+  @keyframes imagePopFlip {
+    0% {
+      opacity: 0;
+      transform: scale(0.7) rotateY(20deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotateY(0deg);
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <div class="about-header" data-aos="fade-down">
+      <h1>About Us</h1>
+      <p>Empowering Agriculture with Smart Crop Recommendations</p>
+    </div>
+
+    <div class="about-container">
+  <div class="about-text" data-aos="fade-right">
+    <p>
+      Welcome to our intelligent <em>Crop Recommendation System</em> — an innovative solution designed to empower farmers, agricultural researchers, and agri-tech professionals. Our platform leverages data-driven insights to help users identify the most suitable crops based on specific soil and environmental conditions.
+    </p>
+    <p>
+      By analyzing key parameters, our model predicts the optimal crop choice from a curated list of <strong>22 essential crops</strong>, enabling smarter and more sustainable farming decisions.
+    </p>
+    <ul>
+      <li><strong>🧪 Soil Nutrients:</strong> Nitrogen (N), Phosphorus (P), Potassium (K)</li>
+      <li><strong>🌦️ Environmental Conditions:</strong> Temperature, Humidity, pH level, Rainfall</li>
+    </ul>
+
+    <p><strong>🌱 Our crop categories include:</strong></p>
+    <ul>
+      <li>🌾 <strong>Cereals & Pulses:</strong> Rice, Maize, Lentil, Blackgram, Mungbean, Mothbeans, Pigeonpeas, Kidneybeans, Chickpea</li>
+      <li>🍎 <strong>Fruits & Nuts:</strong> Papaya, Orange, Apple, Muskmelon, Watermelon, Grapes, Mango, Banana, Pomegranate, Coconut</li>
+      <li>☕ <strong>Commercial Crops:</strong> Cotton, Jute, Coffee</li>
+    </ul>
+
+    <a href="/" class="back-button">← Back to Home</a>
+  </div>
+
+  <div class="about-image" data-aos="fade-left">
+    <img src="{{ url_for('static', filename='images/background.jpg') }}" alt="Green crop field at sunset" />
+  </div>
+</div>
+
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  </script>
+</body>
+</html>
+

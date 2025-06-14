@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Crop Recommendation System</title>
+    <link rel="stylesheet" href="/static/ss.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="theme-toggle" id="themeToggle" title="Toggle Dark/Light Mode">
+      <div class="theme-toggle-icon">
+        <i class="fas fa-sun"></i>
+      </div>
+    </div>
+
+    <div class="container main-container">
+      <header>
+        <div class="logo">
+          <i class="fas fa-seedling"></i>
+          <h1>Smart Crop Recommendation</h1>
+        </div>
+        <p class="tagline">
+          Get AI-powered recommendations for optimal crop selection based on
+          soil conditions
+        </p>
+      </header>
+
+      <div class="content-wrapper">
+        <!-- How to Use Section -->
+        <div class="guide-section collapsible">
+          <div class="collapsible-header">
+            <h2><i class="fas fa-question-circle"></i> How to Use This Tool</h2>
+            <i class="fas fa-chevron-down" style="visibility:hidden"></i>
+          </div>
+          <div class="collapsible-content">
+            <div class="guide-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Enter Soil Parameters</h3>
+                <p>Fill in all required fields with your soil test results and environmental conditions. Here are sample values to guide you:</p>
+                <ul>
+                  <li><strong>Nitrogen (N):</strong> 40 mg/kg (typical range: 0-150 mg/kg)</li>
+                  <li><strong>Phosphorus (P):</strong> 50 mg/kg (typical range: 3-155 mg/kg)</li>
+                  <li><strong>Potassium (K):</strong> 60 mg/kg (typical range: 3-215 mg/kg)</li>
+                  <li><strong>Temperature:</strong> 25°C (typical range: 6-48°C)</li>
+                  <li><strong>Humidity:</strong> 70% (typical range: 12-110%)</li>
+                  <li><strong>pH Level:</strong> 6.5 (typical range: 3-10)</li>
+                  <li><strong>Rainfall:</strong> 200 mm (typical range: 15-305 mm)</li>
+                </ul>
+                <p>Don't know where to get soil test data? 
+                  <span class="tooltip" data-tooltip="Obtain soil tests from your local agricultural extension service, university agriculture department, or commercial soil testing kits. For environmental data, check local weather stations or agricultural databases.">?</span>
+                </p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Get Recommendation</h3>
+                <p>Click the "Get Recommendation" button to analyze your inputs and receive crop suggestions.</p>
+                <p>The system uses machine learning to match your conditions with optimal crops.</p>
+              </div>
+            </div>
+            <div class="guide-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>Review Results</h3>
+                <p>Examine the recommended crop and detailed information including:</p>
+                <ul>
+                  <li>Common diseases and prevention</li>
+                  <li>Optimal irrigation methods</li>
+                  <li>Recommended fertilizers</li>
+                  <li>Pest management strategies</li>
+                  <li>Pesticide recommendations</li>
+                  <li>Seasonal guidance</li>
+                  <li>Alternative crop options</li>
+                  <li>Regional considerations</li>
+                </ul>
+              </div>
+            </div>
+            <div class="guide-tips">
+              <h3><i class="fas fa-lightbulb"></i> Pro Tips</h3>
+              <div class="tips-grid">
+                <div class="tip-card">
+                  <i class="fas fa-flask"></i>
+                  <h4>Accurate Measurements</h4>
+                  <p>For best results, use recent soil test data from your local agricultural extension service.</p>
+                </div>
+                <div class="tip-card">
+                  <i class="fas fa-calendar-alt"></i>
+                  <h4>Seasonal Considerations</h4>
+                  <p>Remember that temperature and rainfall patterns vary by season - consider your planting timeframe.</p>
+                </div>
+                <div class="tip-card">
+                  <i class="fas fa-map-marked-alt"></i>
+                  <h4>Local Adaptation</h4>
+                  <p>Combine these recommendations with local knowledge about what grows well in your area.</p>
+                </div>
+              </div>
+            </div>
+            <!-- <button class="secondary-button" id="start-tour">Start Guided Tour</button> -->
+          </div>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+          <h2><i class="fas fa-sliders-h"></i> Input Parameters</h2>
+          <form method="POST" action="/predict" id="cropForm">
+            <div class="input-group">
+              <div class="input-field">
+                <label for="nitrogen">
+                  <i class="fas fa-flask"></i> Nitrogen (N)
+                  <span class="tooltip" data-tooltip="Nitrogen content in soil (mg/kg)">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="nitrogen"
+                  required
+                  value="{{ form_data.nitrogen if form_data else '' }}"
+                  placeholder="e.g., 40"
+                />
+                <span class="unit">mg/kg</span>
+              </div>
+              <div class="input-field">
+                <label for="phosphorus">
+                  <i class="fas fa-flask"></i> Phosphorus (P)
+                  <span class="tooltip" data-tooltip="Phosphorus content in soil (mg/kg)">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="phosphorus"
+                  required
+                  value="{{ form_data.phosphorus if form_data else '' }}"
+                  placeholder="e.g., 50"
+                />
+                <span class="unit">mg/kg</span>
+              </div>
+              <div class="input-field">
+                <label for="potassium">
+                  <i class="fas fa-flask"></i> Potassium (K)
+                  <span class="tooltip" data-tooltip="Potassium content in soil (mg/kg)">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="potassium"
+                  required
+                  value="{{ form_data.potassium if form_data else '' }}"
+                  placeholder="e.g., 60"
+                />
+                <span class="unit">mg/kg</span>
+              </div>
+              <div class="input-field">
+                <label for="temperature">
+                  <i class="fas fa-temperature-high"></i> Temperature
+                  <span class="tooltip" data-tooltip="Average temperature in Celsius">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="temperature"
+                  required
+                  value="{{ form_data.temperature if form_data else '' }}"
+                  placeholder="e.g., 25"
+                />
+                <span class="unit">°C</span>
+              </div>
+              <div class="input-field">
+                <label for="humidity">
+                  <i class="fas fa-tint"></i> Humidity
+                  <span class="tooltip" data-tooltip="Average relative humidity">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="humidity"
+                  required
+                  value="{{ form_data.humidity if form_data else '' }}"
+                  placeholder="e.g., 70"
+                />
+                <span class="unit">%</span>
+              </div>
+              <div class="input-field">
+                <label for="ph">
+                  <i class="fas fa-vial"></i> pH Level
+                  <span class="tooltip" data-tooltip="pH value of the soil (0-14 scale)">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="ph"
+                  required
+                  value="{{ form_data.ph if form_data else '' }}"
+                  placeholder="e.g., 6.5"
+                />
+              </div>
+              <div class="input-field">
+                <label for="rainfall">
+                  <i class="fas fa-cloud-rain"></i> Rainfall
+                  <span class="tooltip" data-tooltip="Annual rainfall in millimeters">?</span>
+                </label>
+                <input
+                  type="number"
+                  step="any"
+                  name="rainfall"
+                  required
+                  value="{{ form_data.rainfall if form_data else '' }}"
+                  placeholder="e.g., 200"
+                />
+                <span class="unit">mm</span>
+              </div>
+              
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="primary-button">
+                <i class="fas fa-search"></i> Get Recommendation
+                <span class="loading-spinner" style="display: none;"></span>
+              </button>
+              <button type="reset" class="secondary-button">
+                <i class="fas fa-redo"></i> Reset
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Result Section -->
+        {% if prediction %}
+        <div class="result-section animate-fade-in">
+          <div class="result-header">
+            <i class="fas fa-check-circle"></i>
+            <h2>Recommended Crop</h2>
+          </div>
+          <div class="result-content">
+            <div class="crop-card">
+              <div class="crop-image">
+                <img
+                  src="{{ url_for('static', filename='images/' + crop_image) }}"
+                  alt="{{ prediction }}"
+                />
+              </div>
+              <div class="crop-name">{{ prediction }}</div>
+            </div>
+            {% if crop_details %}
+            <div class="crop-details">
+            <div class="tab-group">
+              <div class="tabs">
+                <button class="tab-btn active" data-tab="diseases">
+                  <i class="fas fa-virus"></i> Diseases
+                </button>
+                <button class="tab-btn" data-tab="irrigation">
+                  <i class="fas fa-water"></i> Irrigation
+                </button>
+                <button class="tab-btn" data-tab="fertilizers">
+                  <i class="fas fa-leaf"></i> Fertilizers
+                </button>
+                <button class="tab-btn" data-tab="pests">
+                  <i class="fas fa-bug"></i> Pests
+                </button>
+                <button class="tab-btn" data-tab="pesticides">
+                  <i class="fas fa-spray-can"></i> Pesticides
+                </button>
+                <!-- <button class="tab-btn" data-tab="seasonal">
+                  <i class="fas fa-calendar"></i> Seasonal Guidance
+                </button> -->
+                <!-- <button class="tab-btn" data-tab="alternatives">
+                  <i class="fas fa-seedling"></i> Alternative Crops
+                </button> -->
+                <!-- <button class="tab-btn" data-tab="regional">
+                  <i class="fas fa-globe"></i> Regional Considerations
+                </button> -->
+              </div>
+              <div class="tab-content">
+                <div class="tab-pane active" id="diseases">
+                  <h3><i class="fas fa-virus"></i> Common Diseases</h3>
+                  <div class="info-content">
+                    {{ crop_details.diseases|safe if crop_details.diseases else 'Information not available' }}
+                  </div>
+                </div>
+                <div class="tab-pane" id="irrigation">
+                  <h3><i class="fas fa-water"></i> Irrigation Methods</h3>
+                  <div class="info-content">
+                    {{ crop_details.irrigation|safe if crop_details.irrigation else 'Information not available' }}
+                  </div>
+                </div>
+                <div class="tab-pane" id="fertilizers">
+                  <h3><i class="fas fa-leaf"></i> Recommended Fertilizers</h3>
+                  <div class="info-content">
+                    {{ crop_details.fertilizers|safe if crop_details.fertilizers else 'Information not available' }}
+                  </div>
+                </div>
+                <div class="tab-pane" id="pests">
+                  <h3><i class="fas fa-bug"></i> Common Pests</h3>
+                  <div class="info-content">
+                    {{ crop_details.pests|safe if crop_details.pests else 'Information not available' }}
+                  </div>
+                </div>
+                <div class="tab-pane" id="pesticides">
+                  <h3><i class="fas fa-spray-can"></i> Recommended Pesticides</h3>
+                  <div class="info-content">
+                    {{ crop_details.pesticides|safe if crop_details.pesticides else 'Information not available' }}
+                  </div>
+                </div>
+                <!-- <div class="tab-pane" id="seasonal">
+                  <h3><i class="fas fa-calendar"></i> Seasonal Guidance</h3>
+                  <div class="info-content">
+                    {{ crop_details.seasonal_guidance|safe if crop_details.seasonal_guidance else 'Plant in early spring for optimal growth. Harvest typically occurs in late summer.' }}
+                  </div>
+                </div> -->
+                <!-- <div class="tab-pane" id="alternatives">
+                  <h3><i class="fas fa-seedling"></i> Alternative Crop Options</h3>
+                  <div class="info-content">
+                    {% if alternative_crops %}
+                    <ul>
+                      {% for alt in alternative_crops %}
+                      <li><strong>{{ alt.name }}</strong>: {{ alt.reason|safe }}</li>
+                      {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No alternative crops available.</p>
+                    {% endif %}
+                  </div>
+                </div> -->
+                <!-- <div class="tab-pane" id="regional">
+                  <h3><i class="fas fa-globe"></i> Regional Considerations</h3>
+                  <div class="info-content">
+                    {{ crop_details.regional_considerations|safe if crop_details.regional_considerations else 'Check local pest management guidelines and ensure crop rotation with legumes to maintain soil fertility.' }}
+                  </div>
+                </div> -->
+              </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+        {% if error %}
+        <div class="error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Educational Resources Section -->
+        <div class="guide-section">
+          <h2><i class="fas fa-book-open"></i> Educational Resources</h2>
+          <br>
+          <div class="tab-group">
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="soil-tips">
+              <i class="fas fa-leaf"></i> Soil Health Tips
+            </button>
+            <button class="tab-btn" data-tab="encyclopedia">
+              <i class="fas fa-book"></i> Crop Encyclopedia
+            </button>
+
+            <button class="tab-btn" data-tab="sustainable">
+              <i class="fas fa-globe"></i> Sustainable Farming
+            </button>
+            <!-- <button class="tab-btn" data-tab="faq">
+              <i class="fas fa-question-circle"></i> FAQ
+            </button> -->
+          </div>
+          <div class="tab-content">
+            <div class="tab-pane" id="encyclopedia">
+              <div class="info-content">
+                <p>Explore detailed information about various crops supported by this system:</p>
+                <ul>
+  <li>
+    <strong>Rice</strong>
+    <span>Requires high humidity and standing water; thrives in alluvial soil with consistent irrigation.</span>
+  </li>
+  <li>
+    <strong>Maize</strong>
+    <span>Prefers well-drained fertile soil with medium texture; grows best in warm, moderate rainfall zones.</span>
+  </li>
+  <li>
+    <strong>Chickpea</strong>
+    <span>Grows in loamy to clay loam soils; thrives in cool, dry climates and needs minimal irrigation.</span>
+  </li>
+  <li>
+    <strong>Kidney Beans</strong>
+    <span>Requires loamy soil with good drainage; sensitive to frost, prefers moderate temperatures.</span>
+  </li>
+  <li>
+    <strong>Pigeon Peas</strong>
+    <span>Tolerates poor soils; prefers semi-arid climates with long warm seasons for maturity.</span>
+  </li>
+  <li>
+    <strong>Moth Beans</strong>
+    <span>Highly drought-resistant; suitable for arid and semi-arid zones with sandy soils.</span>
+  </li>
+  <li>
+    <strong>Mung Bean</strong>
+    <span>Best in loamy soils with good drainage; needs warm weather and moderate rainfall.</span>
+  </li>
+  <li>
+    <strong>Black Gram</strong>
+    <span>Grows in loamy to clay soils; prefers hot and humid climates with good moisture retention.</span>
+  </li>
+  <li>
+    <strong>Lentil</strong>
+    <span>Thrives in fertile, well-drained loamy soil; cool temperatures are ideal during flowering.</span>
+  </li>
+  <li>
+    <strong>Pomegranate</strong>
+    <span>Suited for dry regions with loamy soil; drought-resistant once established, prefers full sun.</span>
+  </li>
+  <li>
+    <strong>Banana</strong>
+    <span>Needs rich, well-drained soil; high humidity and rainfall essential for optimal yield.</span>
+  </li>
+  <li>
+    <strong>Mango</strong>
+    <span>Prefers alluvial or lateritic soils; thrives in tropical to subtropical climates with hot, dry seasons.</span>
+  </li>
+  <li>
+    <strong>Grapes</strong>
+    <span>Well-suited to loamy, sandy soils with good drainage; requires warm, dry climate for fruit ripening.</span>
+  </li>
+  <li>
+    <strong>Watermelon</strong>
+    <span>Grows well in sandy loam soil with high organic content; needs hot, dry weather and good drainage.</span>
+  </li>
+  <li>
+    <strong>Muskmelon</strong>
+    <span>Prefers warm climates and sandy loam soil; needs well-drained fields and full sunlight.</span>
+  </li>
+  <li>
+    <strong>Apple</strong>
+    <span>Requires cold winters and cool summers; best in well-drained loamy soil with a pH of 5.5–6.5.</span>
+  </li>
+  <li>
+    <strong>Orange</strong>
+    <span>Grows in light soils with good drainage; needs warm, moist climate and ample sunshine.</span>
+  </li>
+  <li>
+    <strong>Papaya</strong>
+    <span>Requires rich, well-drained soil; grows quickly in tropical climates with regular watering.</span>
+  </li>
+  <li>
+    <strong>Coconut</strong>
+    <span>Thrives in sandy coastal soils with good water holding capacity; needs high humidity and rainfall.</span>
+  </li>
+  <li>
+    <strong>Cotton</strong>
+    <span>Requires black or alluvial soils with moderate rainfall; thrives in warm climates with low humidity during harvest.</span>
+  </li>
+  <li>
+    <strong>Jute</strong>
+    <span>Needs fertile alluvial soil and standing water; ideal in hot, humid climates with consistent rainfall.</span>
+  </li>
+  <li>
+    <strong>Coffee</strong>
+    <span>Prefers well-drained, acidic soil in shaded areas; ideal in cool climates with frequent rains.</span>
+  </li>
+</ul>
+
+              </div>
+            </div>
+            <div class="tab-pane active" id="soil-tips">
+              <div class="info-content">
+                <ul>
+                  <li>Add organic matter like compost to improve soil structure.</li>
+                  <li>Test and adjust pH levels annually for optimal nutrient availability.</li>
+                  <li>Use cover crops to prevent erosion and enhance soil fertility.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="tab-pane" id="sustainable">
+              <div class="info-content">
+                <ul>
+                  <li>Implement crop rotation to maintain soil health.</li>
+                  <li>Use drip irrigation to conserve water.</li>
+                  <li>Adopt organic pest control methods when possible.</li>
+                </ul>
+              </div>
+            </div>
+            <!-- <div class="tab-pane" id="faq">
+              <div class="info-content">
+                <ul>
+                  <li><strong>How do I interpret soil test results?</strong> Compare your values to the sample ranges provided in the "How to Use" section.</li>
+                  <li><strong>What if the recommended crop isn’t suitable?</strong> Check alternative crop options in the results.</li>
+                  <li><strong>How often should I test my soil?</strong> Annually or before each planting season.</li>
+                </ul>
+              </div>
+            </div> -->
+          </div>
+          </div>
+        </div>
+        <!-- Existing HTML remains unchanged above this point -->
+<!-- Add after the crop-details or at the end of the content-wrapper -->
+<section class="more-info-section">
+  <h2><i class="fas fa-book-open"></i> Additional Information</h2>
+
+  <div class="seasonal-guidance">
+    <h3><i class="fas fa-calendar-alt"></i> Seasonal Planting Guide</h3>
+    <p>For your recommended crop, here is the best planting window based on climate zones. Adjust according to local rainfall and frost dates.</p>
+    <ul>
+      <li><strong>Kharif crops:</strong> Plant during monsoon (June - September)</li>
+      <li><strong>Rabi crops:</strong> Plant in winter (October - March)</li>
+      <li><strong>Zaid crops:</strong> Plant in summer (March - June)</li>
+    </ul>
+  </div>
+
+
+  <div class="regional-advice">
+    <h3><i class="fas fa-map-marker-alt"></i> Regional Recommendations</h3>
+    <p>Adapt suggestions to your specific region. Use local agricultural extension service insights and indigenous practices for improved yield.</p>
+  </div>
+
+
+  <!-- <div class="faq-section">
+    <h3><i class="fas fa-question"></i> FAQ</h3>
+    <p><strong>Q:</strong> What if I don't have a soil test?<br><strong>A:</strong> Use average values from similar farms in your area or consult local experts.</p>
+    <p><strong>Q:</strong> Can I use this tool for terrace gardens?<br><strong>A:</strong> Yes, but results may vary due to limited soil depth.</p>
+  </div>
+</section> -->
+
+<!-- Add styles (suggested to extend existing CSS in s.css) -->
+<style>
+.more-info-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: var(--result-bg);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--result-border);
+}
+.more-info-section h3 {
+  margin-top: 2rem;
+}
+.more-info-section ul, .more-info-section ol {
+  margin-left: 1.5rem;
+  line-height: 1.6;
+}
+.more-info-section a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+.more-info-section a:hover {
+  color: var(--accent-dark);
+}
+</style>
+
+
+      </div>
+
+      <footer>
+        <p>
+          © {{ current_year }} Smart Crop Recommendation System |
+          <a href="about">About</a> | <a href="contact">Contact</a>
+        </p>
+      </footer>
+    </div>
+
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Theme toggle
+  const themeToggle = document.getElementById("themeToggle");
+  const themeIcon = themeToggle?.querySelector("i");
+  const htmlElement = document.documentElement;
+
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme) {
+    htmlElement.setAttribute("data-theme", savedTheme);
+    updateIcon(savedTheme);
+  } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    htmlElement.setAttribute("data-theme", "dark");
+    updateIcon("dark");
+  }
+
+  themeToggle?.addEventListener("click", function () {
+    const currentTheme = htmlElement.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    htmlElement.setAttribute("data-theme", newTheme);
+    localStorage.setItem("theme", newTheme);
+    updateIcon(newTheme);
+  });
+
+  function updateIcon(theme) {
+    if (themeIcon) {
+      themeIcon.className = theme === "dark" ? "fas fa-moon" : "fas fa-sun";
+    }
+  }
+
+  // Collapsible section toggle
+  document.querySelectorAll('.collapsible-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const content = header.nextElementSibling;
+      header.classList.toggle('active');
+      content?.classList.toggle('active');
+    });
+  });
+
+  // ✅ Scoped tab functionality fix
+  document.querySelectorAll(".tab-group").forEach(group => {
+    const tabButtons = group.querySelectorAll(".tab-btn");
+    const tabPanes = group.querySelectorAll(".tab-pane");
+
+    tabButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        tabButtons.forEach((btn) => btn.classList.remove("active"));
+        tabPanes.forEach((pane) => pane.classList.remove("active"));
+
+        button.classList.add("active");
+        const tabId = button.getAttribute("data-tab");
+        const targetPane = group.querySelector("#" + tabId);
+        targetPane?.classList.add("active");
+      });
+    });
+  });
+
+  // Tooltip handling
+  document.querySelectorAll(".tooltip").forEach((tooltip) => {
+    tooltip.addEventListener("mouseenter", function () {
+      const tooltipText = this.getAttribute("data-tooltip");
+      if (!tooltipText) return;
+      const tooltipElement = document.createElement("div");
+      tooltipElement.className = "tooltip-text";
+      tooltipElement.textContent = tooltipText;
+      this.appendChild(tooltipElement);
+    });
+
+    tooltip.addEventListener("mouseleave", function () {
+      const tooltipElement = this.querySelector(".tooltip-text");
+      if (tooltipElement) tooltipElement.remove();
+    });
+  });
+
+  // Form validation
+  const cropForm = document.getElementById("cropForm");
+  if (cropForm) {
+    const resetButton = cropForm.querySelector('button[type="reset"]');
+    if (resetButton) {
+      resetButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        const inputFields = cropForm.querySelectorAll("input, select");
+        inputFields.forEach(input => {
+          input.value = '';
+          input.classList.remove("error-field");
+        });
+        document.querySelectorAll(".input-error").forEach(el => el.remove());
+      });
+    }
+
+    cropForm.addEventListener("submit", function (event) {
+      const inputs = cropForm.querySelectorAll("input[required], select[required]");
+      let hasErrors = false;
+      document.querySelectorAll(".input-error").forEach(el => el.remove());
+
+      inputs.forEach(input => {
+        input.classList.remove("error-field");
+
+        if (!input.value.trim()) {
+          hasErrors = true;
+          input.classList.add("error-field");
+          const errorMsg = document.createElement("div");
+          errorMsg.className = "input-error";
+          errorMsg.textContent = "This field is required";
+          input.parentNode.appendChild(errorMsg);
+        } else if (input.type === "number") {
+          const value = parseFloat(input.value);
+          let isOutOfRange = false;
+          let rangeMessage = "";
+
+          switch (input.name) {
+            case "nitrogen":
+              if (value < 0 || value > 150) { isOutOfRange = true; rangeMessage = "Typically between 0-150 mg/kg"; }
+              break;
+            case "phosphorus":
+              if (value < 3 || value > 155) { isOutOfRange = true; rangeMessage = "Typically between 3-155 mg/kg"; }
+              break;
+            case "potassium":
+              if (value < 3 || value > 215) { isOutOfRange = true; rangeMessage = "Typically between 3-215 mg/kg"; }
+              break;
+            case "temperature":
+              if (value < 6 || value > 48) { isOutOfRange = true; rangeMessage = "Typically between 6°C and 48°C"; }
+              break;
+            case "humidity":
+              if (value < 12 || value > 110) { isOutOfRange = true; rangeMessage = "Must be between 12-110%"; }
+              break;
+            case "ph":
+              if (value < 3 || value > 10) { isOutOfRange = true; rangeMessage = "pH typically between 3-10"; }
+              break;
+            case "rainfall":
+              if (value < 15 || value > 305) { isOutOfRange = true; rangeMessage = "Typically between 15-305mm"; }
+              break;
+          }
+
+          if (isOutOfRange) {
+            hasErrors = true;
+            input.classList.add("error-field");
+            const errorMsg = document.createElement("div");
+            errorMsg.className = "input-error";
+            errorMsg.textContent = "Unusual value. " + rangeMessage;
+            input.parentNode.appendChild(errorMsg);
+          }
+        }
+      });
+
+      if (hasErrors) {
+        event.preventDefault();
+        const firstError = document.querySelector(".error-field");
+        firstError?.focus();
+        firstError?.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        const spinner = document.querySelector(".loading-spinner");
+        if (spinner) {
+          spinner.style.display = "inline-block";
+          setTimeout(() => { spinner.style.display = "none"; }, 1000);
+        }
+      }
+    });
+  }
+});
+</script>
+
+  </body>
+</html>
