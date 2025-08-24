@@ -19,6 +19,7 @@ with open(scaler_path, 'rb') as scaler_file:
 # Load crop information from CSV
 crop_info_path = 'Updated_Crop_Info.csv'
 crop_info_df = pd.read_csv(crop_info_path)
+
 # Convert DataFrame to dictionary for easy access
 crop_info = {}
 for _, row in crop_info_df.iterrows():
@@ -112,4 +113,5 @@ def contact():
     return render_template('contact.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))  # Use Render or Railway port
+    app.run(host='0.0.0.0', port=port, debug=True)
